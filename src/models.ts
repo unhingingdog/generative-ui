@@ -60,6 +60,7 @@ export interface List {
 export interface DialogButton {
   type: 'dialog-button';
   value: string;
+  submitLoadingContent?: string;
 }
 
 /**
@@ -118,6 +119,7 @@ export interface Form {
   id: string;
   fields: FormField[];
   submitButton: FormSubmitButton;
+  submitLoadingContent?: string;
 }
 
 export type Component =

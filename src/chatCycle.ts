@@ -11,15 +11,34 @@ export async function startChatCycle(root: HTMLElement): Promise<void> {
   );
 }
 
+const createLoadingComponent = (
+  content: string,
+  parentEl: HTMLElement,
+): (() => void) => {
+  let ellipsisCount = 0;
+  const loadingEl = document.createElement('p');
+  loadingEl.classList.add('loading');
+  loadingEl.textContent = content + '.'.repeat(ellipsisCount);
+  parentEl.appendChild(loadingEl);
+
+  const interval = setInterval(() => {
+    ellipsisCount = (ellipsisCount + 1) % 4;
+    loadingEl.textContent = content + '.'.repeat(ellipsisCount);
+  }, 600);
+
+  const remove = () => {
+    parentEl.removeChild(loadingEl);
+    clearInterval(interval);
+  };
+};
+
 async function handleUserSubmit(
   root: HTMLElement,
   userInput: string,
 ): Promise<void> {
   // Clear root and display a loading indicator
   root.innerHTML = '';
-  const loadingEl = document.createElement('p');
-  loadingEl.textContent = 'Loading...';
-  root.appendChild(loadingEl);
+  createLoadingComponent('Thinking', root);
 
   // Get response from the LLM via client.ts
   const response = await promptLLM(userInput);
