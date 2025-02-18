@@ -19,17 +19,19 @@ import { promptLLM } from './client.ts';
 const createEl = <K extends keyof HTMLElementTagNameMap>(
   tag: K,
   text?: string,
+  className?: stirng,
 ): HTMLElementTagNameMap[K] => {
   const el = document.createElement(tag);
+  if (className) el.classList.add(className);
   if (text) el.textContent = text;
   return el;
 };
 
 export const createTextNode = ({ content }: TextNode): HTMLElement =>
-  createEl('span', content);
+  createEl('span', content, 'gen-ui-text');
 
 export const createHeading = ({ content }: Heading): HTMLElement =>
-  createEl('h2', content);
+  createEl('h2', content, 'gen-ui-heading');
 
 // Container may have interactive children so we pass submitHandler recursively.
 export const createContainer = (
@@ -37,6 +39,8 @@ export const createContainer = (
   submitHandler: UserPromptSubmitHandler,
 ): HTMLElement => {
   const div = createEl('div');
+  div.classList.add('gen-ui-container');
+
   container.children.forEach((child) =>
     div.appendChild(createComponent(child, submitHandler)),
   );
@@ -44,11 +48,11 @@ export const createContainer = (
 };
 
 export const createListItem = ({ content }: ListItem): HTMLElement =>
-  createEl('li', content);
+  createEl('li', content, 'gen-ui-list-item');
 
 // Lists are non-interactive, so they don't need a submitHandler.
 export const createList = (list: List): HTMLElement => {
-  const ul = createEl('ul');
+  const ul = createEl('ul', undefined, 'gen-ui-list');
   list.children.forEach((item) => ul.appendChild(createListItem(item)));
   return ul;
 };
@@ -57,7 +61,7 @@ export const createDialogButton = (
   { value }: DialogButton,
   onClick: (value: string) => void,
 ): HTMLElement => {
-  const button = createEl('button', value);
+  const button = createEl('button', value, 'gen-ui-dialog-button');
   button.addEventListener('click', () => onClick(value));
   return button;
 };
@@ -66,13 +70,17 @@ export const createDialog = (
   { id, heading, request, choices }: Dialog,
   onSubmit: (data: DialogPromptRequestValue) => void,
 ): HTMLElement => {
-  const dialog = createEl('div');
+  const dialog = createEl('div', undefined, 'gen-ui-dialog');
   if (heading) {
-    dialog.appendChild(createEl('h2', heading));
-    dialog.appendChild(createEl('br'));
+    dialog.appendChild(createEl('h2', heading, 'gen-ui-dialog-heading'));
+    //dialog.appendChild(createEl('br', undefined, 'gen-ui-dialog-break'));
   }
-  dialog.appendChild(createEl('p', request));
-  const choicesContainer = createEl('div');
+  dialog.appendChild(createEl('p', request, 'gen-ui-dialog-request'));
+  const choicesContainer = createEl(
+    'div',
+    undefined,
+    'gen-ui-dialog-button-container',
+  );
   choices.forEach((btn) =>
     choicesContainer.appendChild(
       createDialogButton(btn, () => onSubmit({ id, value: btn.value })),
@@ -86,11 +94,15 @@ export const createForm = (
   { id, fields, submitButton }: Form,
   onSubmit: (data: FormPromptRequestValue) => void,
 ): HTMLFormElement => {
-  const form = createEl('form') as HTMLFormElement;
+  const form = createEl('form', undefined, 'gen-ui-form') as HTMLFormElement;
   form.id = id;
 
   fields.forEach(({ id, label }) => {
-    const fieldContainer = createEl('div');
+    const fieldContainer = createEl(
+      'div',
+      undefined,
+      'gen-ui-form-fields-container',
+    );
     const labelEl = createEl('label', label) as HTMLLabelElement;
     labelEl.htmlFor = id;
     const input = createEl('input') as HTMLInputElement;

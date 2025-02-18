@@ -5,7 +5,10 @@ import { Component, UserPromptSubmitHandler } from './models';
 export async function startChatCycle(root: HTMLElement): Promise<void> {
   await initChatSession();
   // Auto-submit an initial prompt on load
-  await handleUserSubmit(root, 'Hello, assistant!');
+  await handleUserSubmit(
+    root,
+    'Please initialise conversation with detailed UI template.',
+  );
 }
 
 async function handleUserSubmit(

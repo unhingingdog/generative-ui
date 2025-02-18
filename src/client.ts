@@ -1,7 +1,7 @@
 import OpenAI, { Configuration, OpenAIApi } from 'openai';
 
-const key = 'temp_key';
-const id = 'asst_32yWmTvd4zmRkwJxpDS9kJr6';
+const key = '<your key>';
+const id = '<model id>';
 
 const openai = new OpenAI({ apiKey: key, dangerouslyAllowBrowser: true });
 

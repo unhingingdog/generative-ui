@@ -1,8 +1,9 @@
-// main.ts
 import './style.css';
-import typescriptLogo from './typescript.svg';
-import viteLogo from '/vite.svg';
 import { startChatCycle } from './chatCycle';
+import type { Component, UserPromptSubmitHandler } from './models';
+import { buildTree } from './components';
+
+import { choices, complexInput } from './exampleTemplates';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -10,5 +11,11 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </div>
 `;
 
-const root = document.getElementById('root');
+//const submitHandler: UserPromptSubmitHandler = {
+//  onSubmit: (value) => alert(JSON.stringify(value)),
+//};
+//
+//const root = document.getElementById('root');
+//buildTree(root, complexInput, submitHandler);
+
 startChatCycle(root);
